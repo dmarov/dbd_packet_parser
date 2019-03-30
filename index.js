@@ -1,7 +1,9 @@
+#!/usr/bin/env /usr/local/bin/node
 "use_strict";
 
 const fs = require('fs');
 const readline = require('readline');
+const PDFDocument = require('pdfkit');
 
 let path = process.argv[2];
 
@@ -9,25 +11,9 @@ let lineReader = readline.createInterface({
     input: fs.createReadStream(path)
 });
 
-// let arr = new Map;
-// lineReader.on('line', line => {
+let arr = new Map();
+let glyph = [];
 
-//     let obj = JSON.parse(line);
-
-//     if (arr.has(obj.len)) {
-//         arr.set(obj.len, arr.get(obj.len) + 1);
-//     } else {
-//         arr.set(obj.len, 1);
-//     }
-// });
-
-
-// lineReader.on('close', line => {
-
-//     console.log(arr);
-// });
-
-let arr = new Map;
 lineReader.on('line', line => {
 
     let obj = JSON.parse(line);
@@ -45,13 +31,33 @@ lineReader.on('line', line => {
     } else {
         arr.set(slice, 1);
     }
-    // if (slice == '[0,1,97,30]') {
-    //     console.log(payload[8]);
-    // }
+
+    if (slice == '[0,1,97,30]') {
+
+        glyph.push(payload[6]);
+        // console.log(payload);
+    }
 });
 
+lineReader.on('close', async line => {
 
-lineReader.on('close', line => {
+    const doc = new PDFDocument({size:[glyph.length, 500]});
+    doc.pipe(fs.createWriteStream('output.pdf'));
+
+    doc.save()
+       .moveTo(0, 300);
+
+    for (let x = 0; x < glyph.length; ++x) {
+
+       doc.lineTo(x, 300 - glyph[x]);
+    }
+
+    doc.stroke();
+
+    doc.end();
 
     console.log(arr);
+    console.log(glyph);
+
 });
+
