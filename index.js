@@ -12,7 +12,8 @@ let lineReader = readline.createInterface({
 });
 
 let arr = new Map();
-let glyph = [];
+let glyph1 = [];
+let glyph2 = [];
 
 lineReader.on('line', line => {
 
@@ -34,30 +35,39 @@ lineReader.on('line', line => {
 
     if (slice == '[0,1,97,30]') {
 
-        glyph.push(payload[6]);
+        glyph1.push(payload[6]);
+        glyph2.push(payload[7]);
         // console.log(payload);
     }
 });
 
 lineReader.on('close', async line => {
 
-    const doc = new PDFDocument({size:[glyph.length, 500]});
+    const doc = new PDFDocument({size:[glyph1.length, 500]});
     doc.pipe(fs.createWriteStream('output.pdf'));
 
     doc.save()
        .moveTo(0, 300);
 
-    for (let x = 0; x < glyph.length; ++x) {
+    for (let x = 0; x < glyph1.length; ++x) {
 
-       doc.lineTo(x, 300 - glyph[x]);
+       doc.lineTo(x, 300 - glyph1[x]);
     }
 
-    doc.stroke();
+    doc.stroke("#0F0");
+
+    doc.save()
+        .moveTo(0, 300);
+
+    for (let x = 0; x < glyph2.length; ++x) {
+
+       doc.lineTo(x, 300 - glyph2[x]);
+    }
+
+    doc.stroke("#F00");
 
     doc.end();
 
     console.log(arr);
-    console.log(glyph);
-
 });
 
