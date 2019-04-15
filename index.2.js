@@ -5,12 +5,13 @@ const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
 
-let files = fs.readdirSync('./logs');
+let dir = process.argv[2];
+let files = fs.readdirSync(dir);
 
 for (let file of files) {
 
     let lineReader = readline.createInterface({
-        input: fs.createReadStream(path.join(__dirname, './logs', file)),
+        input: fs.createReadStream(path.join(__dirname, dir, file)),
     });
 
     let map = {};
