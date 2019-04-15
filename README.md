@@ -64,7 +64,7 @@ EBFEAFEC: 3
 
 ```
 001016E1 - regular world data
-10100003 - ?; occurs 2 - 3 times per sec, equal intervals
+10100003 - ?; occurs 2 - 3 times per sec, equal intervals, first 4 bytes - chaotic
 00100042 - ?
 EBFEAFEC - end session
 ```
