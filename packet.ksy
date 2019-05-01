@@ -1,28 +1,17 @@
 meta:
-  id: gif
-  file-extension: gif
+  id: dbdpacket
   endian: le
 seq:
   - id: header
     type: header
-  - id: logical_screen
-    type: logical_screen
 types:
   header:
     seq:
-      - id: magic
-        contents: 'GIF'
-      - id: version
-        size: 3
-  logical_screen:
-    seq:
-      - id: image_width
-        type: u2
-      - id: image_height
-        type: u2
-      - id: flags
+      - id: first
         type: u1
-      - id: bg_color_index
+      - id: second
         type: u1
-      - id: pixel_aspect_ratio
+      - id: third
+        type: u1
+      - id: fourth
         type: u1

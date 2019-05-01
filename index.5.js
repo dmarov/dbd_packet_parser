@@ -5,6 +5,8 @@
 const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
+const Dbdpacket = require('./Dbdpacket');
+const KaitaiStream = require('kaitai-struct/KaitaiStream');
 
 let file = process.argv[2];
 
@@ -20,13 +22,15 @@ lineReader.on('line', line => {
 
     let payload = obj.payload;
     let arr = payload.split('|');
-    let res = '';
+    let res = [];
     for (let el of arr) {
         if (el[0] != undefined && el[1] != undefined)
-            res += el[1] + el[0];
+            res.push(parseInt(el[1], 16) * 16 + parseInt(el[0], 16));
     }
 
-        console.log(res);
+    let packet = new Dbdpacket(new KaitaiStream(new Uint16Array(res)));
+    let str = '' + packet.header.first + ' ' + packet.header.second + ' ' + packet.header.third + ' ' + packet.header.fourth;
+    console.log(str);
 
 });
 
