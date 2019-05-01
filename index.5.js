@@ -28,9 +28,14 @@ lineReader.on('line', line => {
             res.push(parseInt(el[1], 16) * 16 + parseInt(el[0], 16));
     }
 
-    let packet = new Dbdpacket(new KaitaiStream(new Uint16Array(res)));
+    let packet = new Dbdpacket(new KaitaiStream(new Uint8Array(res)));
     let str = '' + packet.header.first + ' ' + packet.header.second + ' ' + packet.header.third + ' ' + packet.header.fourth;
-    console.log(str);
+
+    let body = packet.bodyMain;
+
+    if (body !== undefined) {
+        console.log(body.timingFirst)
+    }
 
 });
 
