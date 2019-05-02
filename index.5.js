@@ -22,23 +22,50 @@ lineReader.on('line', line => {
 
     let payload = obj.payload;
     let arr = payload.split('|');
+    arr.pop();
     let res = [];
     for (let el of arr) {
         if (el[0] != undefined && el[1] != undefined)
             res.push(parseInt(el[1], 16) * 16 + parseInt(el[0], 16));
     }
 
-    let packet = new Dbdpacket(new KaitaiStream(new Uint8Array(res)));
-    let str = '' + packet.header.first + ' ' + packet.header.second + ' ' + packet.header.third + ' ' + packet.header.fourth;
+    try {
 
-    let body = packet.bodyMain;
+        let packet = new Dbdpacket(new KaitaiStream(new Uint8Array(res)));
 
-    if (body !== undefined) {
-        console.log(body.timingFirst)
+        let body = packet.bodyMainTwo;
+
+        if (body !== undefined) {
+
+            console.log(body.const);
+            // console.log(body.notConst);
+            
+        }
+
+        body = packet.bodyMainOne;
+
+        if (body !== undefined) {
+
+            console.log(body.const);
+            // console.log(body.notConst);
+            
+        }
+    } catch(e) {
+        // console.log(obj);
     }
 
+    // if (arr.length == 56)
+    //     // console.log(payload);
+
+    let val = arr.length;
+
+    if (map[val] !== undefined) {
+        map[val]++;
+    } else {
+        map[val] = 1;
+    }
 });
 
 lineReader.on('close', async line => {
-
+    console.log(map);
 });

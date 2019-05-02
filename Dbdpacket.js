@@ -22,6 +22,12 @@ var Dbdpacket = (function() {
     if ( ((this.header.first == 0) && (this.header.second == 1) && (this.header.third == 97) && (this.header.fourth == 30)) ) {
       this.bodyMain = new BodyMain(this._io, this, this._root);
     }
+    if ( ((this.header.first == 0) && (this.header.second == 1) && (this.header.third == 0) && (this.header.fourth == 36)) ) {
+      this.bodyMainOne = new BodyMainOne(this._io, this, this._root);
+    }
+    if ( ((this.header.first == 1) && (this.header.second == 1) && (this.header.third == 0) && (this.header.fourth == 48)) ) {
+      this.bodyMainTwo = new BodyMainTwo(this._io, this, this._root);
+    }
   }
 
   var Header = Dbdpacket.Header = (function() {
@@ -52,10 +58,42 @@ var Dbdpacket = (function() {
     }
     BodyMain.prototype._read = function() {
       this.zeroOffset = this._io.readU2le();
-      this.timingFirst = this._io.readU2le();
+      this.counterFirst = this._io.readU2le();
     }
 
     return BodyMain;
+  })();
+
+  var BodyMainOne = Dbdpacket.BodyMainOne = (function() {
+    function BodyMainOne(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    BodyMainOne.prototype._read = function() {
+      this.notConst = KaitaiStream.bytesToStr(this._io.readBytes(16), "ASCII");
+      this.const = KaitaiStream.bytesToStr(this._io.readBytes(36), "ASCII");
+    }
+
+    return BodyMainOne;
+  })();
+
+  var BodyMainTwo = Dbdpacket.BodyMainTwo = (function() {
+    function BodyMainTwo(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    BodyMainTwo.prototype._read = function() {
+      this.notConst = KaitaiStream.bytesToStr(this._io.readBytes(16), "ASCII");
+      this.const = KaitaiStream.bytesToStr(this._io.readBytes(48), "ASCII");
+    }
+
+    return BodyMainTwo;
   })();
 
   return Dbdpacket;
